@@ -130,10 +130,10 @@ namespace RockBank.Migrations
                 {
                     b.HasBaseType("RockBank.Domain.Classes.Transaction");
 
-                    b.Property<string>("Destination")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<Guid>("DestinationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("DestinationId");
 
                     b.HasDiscriminator().HasValue("Transfer");
                 });
@@ -161,6 +161,17 @@ namespace RockBank.Migrations
                     b.HasOne("RockBank.Domain.Classes.Accounts.Account", null)
                         .WithMany("Transactions")
                         .HasForeignKey("AccountId");
+                });
+
+            modelBuilder.Entity("RockBank.Domain.Classes.Transactions.Transfer", b =>
+                {
+                    b.HasOne("RockBank.Domain.Classes.Accounts.Account", "Destination")
+                        .WithMany()
+                        .HasForeignKey("DestinationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Destination");
                 });
 
             modelBuilder.Entity("RockBank.Domain.Classes.Accounts.Account", b =>

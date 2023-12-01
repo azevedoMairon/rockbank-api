@@ -58,7 +58,7 @@ namespace RockBank.Migrations
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Destination = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    DestinationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -68,6 +68,12 @@ namespace RockBank.Migrations
                         column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Transactions_Accounts_DestinationId",
+                        column: x => x.DestinationId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -79,6 +85,11 @@ namespace RockBank.Migrations
                 name: "IX_Transactions_AccountId",
                 table: "Transactions",
                 column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_DestinationId",
+                table: "Transactions",
+                column: "DestinationId");
         }
 
         /// <inheritdoc />
