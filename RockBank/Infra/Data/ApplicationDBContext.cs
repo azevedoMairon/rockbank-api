@@ -17,6 +17,10 @@ namespace RockBank.Infra.Data
 
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
 
+        public ApplicationDBContext()
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Ignore<Notification>();
