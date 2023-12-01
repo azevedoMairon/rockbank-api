@@ -16,6 +16,7 @@ namespace RockBank.Domain.Classes
         public Guid SourceId { get; set; }
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
+        public Guid DestinationId { get; set; }
 
         public abstract double CalculateTax(double value);
         public abstract double CalculateValue(double value);
