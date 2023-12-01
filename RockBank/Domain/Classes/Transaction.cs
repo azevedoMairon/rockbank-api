@@ -1,4 +1,6 @@
-﻿using RockBank.Domain.Classes.Accounts;
+﻿using Flunt.Validations;
+using RockBank.Domain.Classes.Accounts;
+using RockBank.Domain.Classes.Transactions;
 
 namespace RockBank.Domain.Classes
 {
@@ -17,5 +19,12 @@ namespace RockBank.Domain.Classes
 
         public abstract double CalculateTax(double value);
         public abstract double CalculateValue(double value);
+        public void Validate()
+        {
+            var contract = new Contract<Transaction>()
+                .IsNotNull(Value, "Value")
+                .IsGreaterThan(Value, 0, "Value");
+            AddNotifications(contract);
+        }
     }
 }

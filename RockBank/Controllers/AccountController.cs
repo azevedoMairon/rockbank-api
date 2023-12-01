@@ -16,7 +16,7 @@ namespace RockBank.Controllers
             Customer customer = context.Customers.Find(accountDTO.CustomerId);
 
             if (customer == null)
-                return Results.BadRequest("There's no such Customer with the given Id");
+                return Results.NotFound("There's no such Customer with the given Id");
 
             Account account = new Account
             {

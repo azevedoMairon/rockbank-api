@@ -3,6 +3,7 @@ using RockBank.Domain.Classes.Accounts;
 using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
+using RockBank.Utils;
 
 namespace RockBank.Controllers
 {
@@ -17,10 +18,13 @@ namespace RockBank.Controllers
             Customer customer = context.Customers.Find(account.CustomerId);
 
             if (account == null)
-                return Results.BadRequest("There's no such Account with the given Id");
+                return Results.NotFound("There's no such Account with the given Id");
 
             Deposit deposit = new Deposit(depositDTO.Value, account.Id, customer.Name);
 
+            if (!deposit.IsValid)
+                return Results.ValidationProblem(deposit.Notifications.ConvertToProblemDetails());
+        
             account.Balance = account.Balance + deposit.Value;
             account.Transactions.Add(deposit);
             account.EditInfo(account.Balance, account.Transactions);

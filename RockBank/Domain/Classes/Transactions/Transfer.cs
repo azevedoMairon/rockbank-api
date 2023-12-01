@@ -1,13 +1,21 @@
-﻿namespace RockBank.Domain.Classes.Transactions
+﻿using RockBank.Domain.Classes.Accounts;
+
+namespace RockBank.Domain.Classes.Transactions
 {
     public class Transfer : Transaction
     {
-        public Transfer()
+        public Transfer(double value, Guid sourceId, Guid destinationId, string createdBy)
         {
             Type = "Transfer";
+            Value = CalculateValue(value);
+            SourceId = sourceId;
+            DestinationId = destinationId;
+            CreatedBy = createdBy;
+            Tax = this.CalculateTax(value);
         }
 
-        public string Destination { get; set; }
+        public Guid DestinationId { get; set; }
+        public Account Destination { get; set; }
 
         public override double CalculateTax(double value)
         {

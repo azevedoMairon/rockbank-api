@@ -14,7 +14,7 @@ namespace RockBank.Controllers
         public IResult Read(Guid accountId, ApplicationDBContext context)
         {
             if (context.Accounts.Find(accountId) == null)
-                return Results.BadRequest("There's no such Account with the given Id");
+                return Results.NotFound("There's no such Account with the given Id");
 
             List<Transaction> transactions = context.Transactions.Where(t => t.SourceId == accountId).ToList();
 

@@ -1,4 +1,6 @@
-﻿using Microsoft.Identity.Client;
+﻿using Flunt.Validations;
+using Microsoft.Identity.Client;
+using System.Diagnostics.Contracts;
 
 namespace RockBank.Domain.Classes.Transactions
 {
@@ -6,6 +8,8 @@ namespace RockBank.Domain.Classes.Transactions
     {
         public Deposit(double value, Guid sourceId, string createdBy)
         {
+            Validate();
+
             Type = "Deposit";
             Value = CalculateValue(value);
             SourceId = sourceId;
