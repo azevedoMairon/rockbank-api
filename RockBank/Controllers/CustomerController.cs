@@ -19,6 +19,9 @@ namespace RockBank.Controllers
         [HttpPost]
         public IResult Post(CustomerDTO customerDTO, ApplicationDBContext context)
         {
+            if(customerDTO == null)
+                return Results.BadRequest();
+
             var customer = new Customer
             {
                 Name = customerDTO.Name,
