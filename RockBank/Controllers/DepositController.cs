@@ -24,9 +24,10 @@ namespace RockBank.Controllers
 
             if (!deposit.IsValid)
                 return Results.ValidationProblem(deposit.Notifications.ConvertToProblemDetails());
-        
-            account.Balance = account.Balance + deposit.Value;
+
+            account.AddBalance(deposit.Value);
             account.Transactions.Add(deposit);
+
             account.EditInfo(account.Balance, account.Transactions);
             
             context.Transactions.Add(deposit);

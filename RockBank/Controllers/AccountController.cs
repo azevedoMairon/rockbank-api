@@ -13,17 +13,15 @@ namespace RockBank.Controllers
         [HttpPost]
         public IResult Create(AccountDTO accountDTO, ApplicationDBContext context)
         {
+            if (accountDTO == null)
+                return Results.BadRequest();
+
             Customer customer = context.Customers.Find(accountDTO.CustomerId);
 
             if (customer == null)
                 return Results.NotFound("There's no such Customer with the given Id");
 
-            Account account = new Account
-            {
-                Number = accountDTO.Number,
-                CustomerId = accountDTO.CustomerId,
-                Balance = accountDTO.Balance
-            };
+            Account account = new Account(accountDTO.Number, accountDTO.Balance, accountDTO.CustomerId);
 
             context.Accounts.Add(account);
             context.SaveChanges();

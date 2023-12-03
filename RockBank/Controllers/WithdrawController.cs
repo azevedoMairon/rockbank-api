@@ -16,7 +16,7 @@ namespace RockBank.Controllers
             Account account = context.Accounts.Find(withdrawDTO.Account);
 
             if (account == null)
-                return Results.BadRequest("There's no such Account with the given Id");
+                return Results.NotFound("There's no such Account with the given Id");
 
             if(account.Balance - withdrawDTO.Value < 0)
             {
@@ -32,13 +32,11 @@ namespace RockBank.Controllers
                 CreatedBy = customer.Name,
             };
 
-            account.Balance = account.Balance - withdrawDTO.Value;
+            account.RemoveBalance(withdrawDTO.Value);
             account.Transactions.Add(withdraw);
 
             account.EditInfo(account.Balance, account.Transactions);
-
             context.Transactions.Add(withdraw);
-
             context.SaveChanges();
 
             return Results.Ok(withdraw);

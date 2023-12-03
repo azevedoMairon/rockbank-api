@@ -14,26 +14,38 @@ namespace RockBank.Controllers
         [HttpPost]
         public IResult Transfer(TransferDTO transferDTO, ApplicationDBContext context)
         {
+            if (transferDTO == null)
+                return Results.BadRequest();
+
+            if (transferDTO.Value < 0)
+            {
+                return Results.BadRequest("You Can't perform a transfer with negative value."); ;
+            }
+
             Account sourceAccount = context.Accounts.Find(transferDTO.Source);
             Account destinationAccount = context.Accounts.Find(transferDTO.Destination); 
             Customer customer = context.Customers.Find(sourceAccount.CustomerId);
 
             if (sourceAccount == null || destinationAccount == null)
-                return Results.NotFound("There's no such Account with the given Id");
+                return Results.NotFound("There's no such Account with the given Id.");
+
+            if (sourceAccount.Balance - transferDTO.Value < 0) {
+                return Results.BadRequest("There's no suficient balance to accomplish this transfer."); ;
+            }
 
             Transfer transfer = new Transfer(transferDTO.Value, sourceAccount.Id, destinationAccount.Id, customer.Name);
 
             if (!transfer.IsValid)
                 return Results.ValidationProblem(transfer.Notifications.ConvertToProblemDetails());
 
-            sourceAccount.Balance -= transfer.Value;
-            destinationAccount.Balance += transfer.Value;
+            sourceAccount.RemoveBalance(transfer.Value);
+            destinationAccount.AddBalance(transfer.Value);
 
             sourceAccount.Transactions.Add(transfer);
             destinationAccount.Transactions.Add(transfer);
+
             sourceAccount.EditInfo(sourceAccount.Balance, sourceAccount.Transactions);
             destinationAccount.EditInfo(destinationAccount.Balance, destinationAccount.Transactions);
-
             context.Transactions.Add(transfer);
             context.SaveChanges();
 

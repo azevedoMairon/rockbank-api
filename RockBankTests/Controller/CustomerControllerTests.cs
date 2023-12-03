@@ -7,7 +7,7 @@ using RockBank.Domain.Classes.Accounts;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
 
-namespace RockBankTests
+namespace RockBankTests.Controller
 {
     [TestClass]
     public class CustomerControllerTests
@@ -32,7 +32,7 @@ namespace RockBankTests
         {
             CustomerDTO customerDTO = null;
 
-            BadRequest result = (BadRequest)_customerController.Post(customerDTO, _dbContext);
+            BadRequest result = (BadRequest)_customerController.Create(customerDTO, _dbContext);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status400BadRequest, result.StatusCode);
@@ -43,7 +43,7 @@ namespace RockBankTests
         {
             CustomerDTO customerDTO = new CustomerDTO("Mairon Azevedo", "111-111-111-11", "123456");
 
-            Created<Customer> result = (Created<Customer>)_customerController.Post(customerDTO, _dbContext);
+            Created<Customer> result = (Created<Customer>)_customerController.Create(customerDTO, _dbContext);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status201Created, result.StatusCode);
@@ -57,10 +57,10 @@ namespace RockBankTests
             CustomerDTO customer1 = new CustomerDTO("Mairon Azevedo", "111-111-111-11", "123456");
             CustomerDTO customer2 = new CustomerDTO("Denerson Eduardo", "111-111-111-11", "123456");
 
-            _customerController.Post(customer1, _dbContext);
-            _customerController.Post(customer2, _dbContext);
+            _customerController.Create(customer1, _dbContext);
+            _customerController.Create(customer2, _dbContext);
 
-            Ok<List<Customer>> result = (Ok<List<Customer>>)_customerController.GetAll(_dbContext);
+            Ok<List<Customer>> result = (Ok<List<Customer>>)_customerController.Read(_dbContext);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
@@ -68,16 +68,15 @@ namespace RockBankTests
             Assert.IsNotNull(result.Value);
             Assert.IsInstanceOfType(result.Value, typeof(List<Customer>));
 
-            List<Customer> customers  = (List<Customer>)result.Value;
+            List<Customer> customers = result.Value;
             Assert.IsNotNull(customers);
             Assert.AreEqual(2, customers.Count());
-
         }
 
         [TestMethod]
         public void ControllerShoudReturnEmptyList()
         {
-            Ok<List<Customer>> result = (Ok<List<Customer>>)_customerController.GetAll(_dbContext);
+            Ok<List<Customer>> result = (Ok<List<Customer>>)_customerController.Read(_dbContext);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
@@ -85,7 +84,7 @@ namespace RockBankTests
             Assert.IsNotNull(result.Value);
             Assert.IsInstanceOfType(result.Value, typeof(List<Customer>));
 
-            List<Customer> customers = (List<Customer>)result.Value;
+            List<Customer> customers = result.Value;
 
             Assert.AreEqual(0, customers.Count);
         }

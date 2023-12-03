@@ -2,8 +2,15 @@
 {
     public class AccountDTO
     {
-        public string Number { get; set; }
-        public float Balance { get; set; }
+        public AccountDTO(string number, float balance, Guid customerId)
+        {
+            Number = number;
+            Balance = balance;
+            CustomerId = customerId; 
+        }
+
+        public string Number { get; private set; }
+        public float Balance { get; private set; }
         public Guid CustomerId { get; set; }
     }
 }
