@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockBank", "RockBank\RockBank.csproj", "{C4398DCF-EE82-4E87-A3F3-080055327874}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockBankTests", "RockBankTests\RockBankTests.csproj", "{75A97EA2-B848-454F-AE53-4CEA84AFB775}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockBankTests", "RockBankTests\RockBankTests.csproj", "{75A97EA2-B848-454F-AE53-4CEA84AFB775}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

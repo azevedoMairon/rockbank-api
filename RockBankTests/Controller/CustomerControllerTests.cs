@@ -70,7 +70,7 @@ namespace RockBankTests.Controller
 
             List<Customer> customers = result.Value;
             Assert.IsNotNull(customers);
-            Assert.AreEqual(2, customers.Count());
+            Assert.AreEqual(2, customers.Count);
         }
 
         [TestMethod]

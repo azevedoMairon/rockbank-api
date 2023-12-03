@@ -10,21 +10,28 @@ namespace RockBank.Controllers
     [Route("[controller]")]
     public class AccountController : ControllerBase
     {
+        private readonly ApplicationDBContext _context;
+
+        public AccountController(ApplicationDBContext context)
+        {
+            _context = context;
+        }
+
         [HttpPost]
-        public IResult Create(AccountDTO accountDTO, ApplicationDBContext context)
+        public IResult Create(AccountDTO accountDTO)
         {
             if (accountDTO == null)
                 return Results.BadRequest();
 
-            Customer customer = context.Customers.Find(accountDTO.CustomerId);
+            Customer customer = _context.Customers.Find(accountDTO.CustomerId);
 
             if (customer == null)
                 return Results.NotFound("There's no such Customer with the given Id");
 
             Account account = new Account(accountDTO.Number, accountDTO.Balance, accountDTO.CustomerId);
 
-            context.Accounts.Add(account);
-            context.SaveChanges();
+            _context.Accounts.Add(account);
+            _context.SaveChanges();
 
             return Results.Created($"account/{account.Id}", account);
         }

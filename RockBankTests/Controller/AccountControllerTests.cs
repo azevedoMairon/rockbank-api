@@ -25,7 +25,7 @@ namespace RockBankTests.Controller
 
             _dbContext = new ApplicationDBContext(_options);
             _customerController = new CustomerController();
-            _accountController = new AccountController();
+            _accountController = new AccountController(_dbContext);
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace RockBankTests.Controller
         {
             AccountDTO accountDTO = null;
 
-            BadRequest result = (BadRequest)_accountController.Create(accountDTO, _dbContext);
+            BadRequest result = (BadRequest)_accountController.Create(accountDTO);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status400BadRequest, result.StatusCode);
@@ -42,9 +42,9 @@ namespace RockBankTests.Controller
         [TestMethod]
         public void CustomerMustExist()
         {
-            AccountDTO accountDTO = new AccountDTO("77777-77", 3000, new Guid());
+            AccountDTO accountDTO = new AccountDTO("77777-77", 3000, Guid.Empty);
 
-            NotFound<String> result = (NotFound<String>)_accountController.Create(accountDTO, _dbContext);
+            NotFound<String> result = (NotFound<String>)_accountController.Create(accountDTO);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status404NotFound, result.StatusCode);
@@ -58,7 +58,7 @@ namespace RockBankTests.Controller
 
             AccountDTO accountDTO = new AccountDTO("77777-77", 5000, customerResult.Value.Id);
 
-            Created<Account> result = (Created<Account>)_accountController.Create(accountDTO, _dbContext);
+            Created<Account> result = (Created<Account>)_accountController.Create(accountDTO);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status201Created, result.StatusCode);
@@ -76,8 +76,8 @@ namespace RockBankTests.Controller
             AccountDTO account1 = new AccountDTO("77777-77", 5000, customerResult.Value.Id);
             AccountDTO account2 = new AccountDTO("23626-37", 3000, customerResult.Value.Id);
 
-            _accountController.Create(account1, _dbContext);
-            _accountController.Create(account2, _dbContext);
+            _accountController.Create(account1);
+            _accountController.Create(account2);
 
             Ok<List<Account>> result = (Ok<List<Account>>)_accountController.Read(_dbContext);
 
@@ -89,7 +89,7 @@ namespace RockBankTests.Controller
 
             List<Account> account = result.Value;
             Assert.IsNotNull(account);
-            Assert.AreEqual(2, account.Count());
+            Assert.AreEqual(2, account.Count);
         }
 
         [TestMethod]
