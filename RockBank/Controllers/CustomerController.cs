@@ -12,12 +12,10 @@ namespace RockBank.Controllers
     [Route("[controller]")]
     public class CustomerController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
         private readonly CustomerService _customerService;
 
-        public CustomerController(ApplicationDBContext context, CustomerService customerService)
+        public CustomerController(CustomerService customerService)
         {
-            _context = context;
             _customerService = customerService;
         }
 
