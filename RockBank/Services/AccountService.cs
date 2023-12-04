@@ -72,7 +72,7 @@ namespace RockBank.Services
 
         public CashFlowDTO CreateTransfer(TransferDTO transferDTO, Account sourceAccount, Account destinationAccount)
         {
-            Transfer transfer = new Transfer(transferDTO.Value, transferDTO.SourceAccountId, transferDTO.DestinationAccountId, sourceAccount.Customer.Name);
+            Transfer transfer = new Transfer(transferDTO.Value, transferDTO.SourceId, transferDTO.DestinationId, sourceAccount.Customer.Name);
 
             sourceAccount.RemoveBalance(transfer.Value);
             PersistMoneyOperation(sourceAccount, transfer);

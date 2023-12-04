@@ -29,8 +29,8 @@ namespace RockBank.Controllers
             if (!transferDTO.IsValid)
                 return Results.ValidationProblem(transferDTO.Notifications.ConvertToProblemDetails());
             
-            Account sourceAccount = _accountService.Get(transferDTO.SourceAccountId);
-            Account destinationAccount = _accountService.Get(transferDTO.DestinationAccountId);
+            Account sourceAccount = _accountService.Get(transferDTO.SourceId);
+            Account destinationAccount = _accountService.Get(transferDTO.DestinationId);
 
             if (sourceAccount != null && destinationAccount != null)
             {

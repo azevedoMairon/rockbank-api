@@ -11,19 +11,19 @@ namespace RockBank.Domain.DTOs
             var contract = new Contract<WithdrawDTO>()
                 .IsNotNull(Value, "Value")
                 .IsGreaterThan(Value, 0, "Value")
-                .IsNotNull(SourceAccountId, "Source")
-                .IsNotNull(DestinationAccountId, "Destination");
+                .IsNotNull(SourceId, "Source")
+                .IsNotNull(DestinationId, "Destination");
             AddNotifications(contract);
         }
         public TransferDTO(double value, Guid source, Guid destination)
         {
             Validate();
             Value = value;
-            SourceAccountId = source;
-            DestinationAccountId = destination;
+            SourceId = source;
+            DestinationId = destination;
         }
         public double Value { get; private set; }
-        public Guid SourceAccountId { get; private set; }
-        public Guid DestinationAccountId { get; private set; }
+        public Guid SourceId { get; private set; }
+        public Guid DestinationId { get; private set; }
     }
 }
