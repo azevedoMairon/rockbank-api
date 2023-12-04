@@ -7,6 +7,6 @@ namespace RockBank.Services.Interfaces
     {
         public List<Customer> GetAll();
         public Customer Get(Guid id);
-        public Customer Create(CustomerDTO accountDTO);
+        public Customer Create(CustomerDTO customerDTO);
     }
 }

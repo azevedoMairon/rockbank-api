@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RockBank.Domain.Classes.Accounts;
-using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
-using RockBank.Infra.Data;
 using RockBank.Services;
 using RockBank.Utils;
 

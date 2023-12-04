@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RockBank.Domain.Classes.Accounts;
-using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
+using RockBank.Services;
+using RockBank.Utils;
 
 namespace RockBank.Controllers
 {
@@ -10,11 +11,13 @@ namespace RockBank.Controllers
     [Route("[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly AccountService _accountService;
+        private readonly CustomerService _customerService;
 
-        public AccountController(ApplicationDBContext context)
+        public AccountController(AccountService accountService, CustomerService customerService)
         {
-            _context = context;
+            _accountService = accountService;
+            _customerService = customerService;
         }
 
         [HttpPost]
@@ -23,23 +26,26 @@ namespace RockBank.Controllers
             if (accountDTO == null)
                 return Results.BadRequest();
 
-            Customer customer = _context.Customers.Find(accountDTO.CustomerId);
+            if(!accountDTO.IsValid)
+                return Results.ValidationProblem(accountDTO.Notifications.ConvertToProblemDetails());
 
-            if (customer == null)
+            Customer customer = _customerService.Get(accountDTO.CustomerId);
+
+            if (customer != null)
+            {
+                Account account = _accountService.Create(accountDTO);
+                return Results.Created($"account/{account.Id}", account);
+            }
+            else
+            {
                 return Results.NotFound("There's no such Customer with the given Id");
-
-            Account account = new Account(accountDTO.Number, accountDTO.Balance, accountDTO.CustomerId);
-
-            _context.Accounts.Add(account);
-            _context.SaveChanges();
-
-            return Results.Created($"account/{account.Id}", account);
+            }
         }
 
         [HttpGet]
-        public IResult Read(ApplicationDBContext context)
+        public IResult Read()
         {
-            List<Account> accounts = context.Accounts.ToList();
+            List<Account> accounts = _accountService.GetAll();
             return Results.Ok(accounts);
         }
     }
