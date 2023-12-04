@@ -57,6 +57,9 @@ namespace RockBankTests.Controller
         [TestMethod]
         public void ControllerShouldReturnAllCustomers()
         {
+            _dbContext.Database.EnsureDeleted();
+            _dbContext.Database.EnsureCreated();
+
             CustomerDTO customer1 = new CustomerDTO("Mairon Azevedo", "111-111-111-11", "123456");
             CustomerDTO customer2 = new CustomerDTO("Denerson Eduardo", "111-111-111-11", "123456");
 

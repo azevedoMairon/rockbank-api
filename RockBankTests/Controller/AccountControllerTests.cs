@@ -79,6 +79,9 @@ namespace RockBankTests.Controller
         [TestMethod]
         public void ControllerShouldReturnAllAccounts()
         {
+            _dbContext.Database.EnsureDeleted();
+            _dbContext.Database.EnsureCreated();
+
             CustomerDTO customerDTO = new CustomerDTO("Mairon Azevedo", "111-111-111-11", "123456");
             Created<Customer> customerResult = (Created<Customer>)_customerController.Create(customerDTO);
 
