@@ -17,8 +17,6 @@ namespace RockBank.Domain.Classes.Transactions
             CreatedBy = createdBy;
             Tax = this.CalculateTax(value);
         }
-        public Guid DestinationId { get; set; }
-        public Account Destination { get; set; }
         public override double CalculateTax(double value)
         {
             return 1;

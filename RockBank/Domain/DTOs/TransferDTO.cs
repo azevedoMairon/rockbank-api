@@ -15,16 +15,16 @@ namespace RockBank.Domain.DTOs
                 .IsNotNull(DestinationId, "Destination");
             AddNotifications(contract);
         }
-        public TransferDTO(double value, Guid source, Guid destination)
+        public TransferDTO(double value, Guid sourceId, Guid destinationId)
         {
             Value = value;
-            SourceId = source;
-            DestinationId = destination;
+            SourceId = sourceId;
+            DestinationId = destinationId;
 
             Validate();
         }
-        public double Value { get; private set; }
-        public Guid SourceId { get; private set; }
-        public Guid DestinationId { get; private set; }
+        public double Value { get; set; }
+        public Guid SourceId { get; set; }
+        public Guid DestinationId { get; set; }
     }
 }

@@ -4,7 +4,6 @@ using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
 using RockBank.Services.Interfaces;
-using System.Transactions;
 
 namespace RockBank.Services
 {
@@ -24,8 +23,10 @@ namespace RockBank.Services
         public Account Get( Guid id ) {
             Account account = _context.Accounts.Find(id);
             Customer customer = _context.Customers.Find(account.CustomerId);
+            List<Cashflow> cashflows = _context.Transactions.Where(t => t.SourceId == id || t.DestinationId == id).ToList();
 
             account.Customer = customer;
+            account.Transactions = cashflows;
 
             return account;
         }
@@ -40,7 +41,7 @@ namespace RockBank.Services
             return account;
         }
 
-        private void PersistMoneyOperation(Account account, Cashflow cashFlow)
+        public void PersistMoneyOperation(Account account, Cashflow cashFlow)
         {
             account.Transactions.Add(cashFlow);
 
@@ -53,6 +54,7 @@ namespace RockBank.Services
         public CashFlowDTO CreateDeposit(DepositDTO depositDTO, Account account)
         {
             Deposit deposit = new Deposit(depositDTO.Value, depositDTO.AccountId, account.Customer.Name);
+            deposit.DestinationId = depositDTO.AccountId;
 
             account.AddBalance(deposit.Value);
             PersistMoneyOperation(account, deposit);
@@ -63,6 +65,7 @@ namespace RockBank.Services
         public CashFlowDTO CreateWithdraw(WithdrawDTO withdrawDTO, Account account)
         {
             Withdraw withdraw = new Withdraw(withdrawDTO.Value, withdrawDTO.AccountId, account.Customer.Name);
+            withdraw.DestinationId = withdrawDTO.AccountId;
 
             account.RemoveBalance(withdraw.Value);
             PersistMoneyOperation(account, withdraw);
@@ -73,12 +76,13 @@ namespace RockBank.Services
         public CashFlowDTO CreateTransfer(TransferDTO transferDTO, Account sourceAccount, Account destinationAccount)
         {
             Transfer transfer = new Transfer(transferDTO.Value, transferDTO.SourceId, transferDTO.DestinationId, sourceAccount.Customer.Name);
+            transfer.DestinationId = transferDTO.DestinationId;
 
             sourceAccount.RemoveBalance(transfer.Value);
             PersistMoneyOperation(sourceAccount, transfer);
 
             destinationAccount.AddBalance(transfer.Value);
-            PersistMoneyOperation(destinationAccount, transfer);
+            _context.SaveChanges();
 
             return new CashFlowDTO(transfer.Type, transfer.Value, transfer.Tax, transfer.CreatedBy, transfer.CreatedOn, sourceAccount.Balance);
         }

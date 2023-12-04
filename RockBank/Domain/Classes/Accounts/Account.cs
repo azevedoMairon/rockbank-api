@@ -9,7 +9,7 @@ namespace RockBank.Domain.Classes.Accounts
         public double Balance { get; private set; }
         public Guid CustomerId { get; private set; }
         public Customer Customer { get; set; }
-        public List<Cashflow> Transactions { get; private set; }
+        public List<Cashflow> Transactions { get; set; }
 
         public Account()
         {

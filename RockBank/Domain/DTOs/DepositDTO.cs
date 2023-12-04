@@ -13,7 +13,6 @@ namespace RockBank.Domain.DTOs
                 .IsNotNull(AccountId, "AccountId");
             AddNotifications(contract);
         }
-
         public DepositDTO(double value, Guid accountId)
         {
             Value = value;

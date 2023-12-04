@@ -13,15 +13,15 @@ namespace RockBank.Domain.DTOs
                 .IsNotNull(AccountId, "AccountId");
             AddNotifications(contract);
         }
-        public WithdrawDTO(double value, Guid account)
+        public WithdrawDTO(double value, Guid accountId)
         {
             Value = value;
-            AccountId = account;
+            AccountId = accountId;
 
             Validate();
         }
 
-        public double Value { get; private set; }
-        public Guid AccountId { get; private set; }
+        public double Value { get; set; }
+        public Guid AccountId { get; set; }
     }
 }
