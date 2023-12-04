@@ -72,7 +72,7 @@ namespace RockBank.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("RockBank.Domain.Classes.Transaction", b =>
+            modelBuilder.Entity("RockBank.Domain.Classes.Cashflow", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,6 +88,9 @@ namespace RockBank.Migrations
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("DestinationId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -114,24 +117,21 @@ namespace RockBank.Migrations
 
                     b.ToTable("Transactions");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Transaction");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Cashflow");
 
                     b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("RockBank.Domain.Classes.Transactions.Deposit", b =>
                 {
-                    b.HasBaseType("RockBank.Domain.Classes.Transaction");
+                    b.HasBaseType("RockBank.Domain.Classes.Cashflow");
 
                     b.HasDiscriminator().HasValue("Deposit");
                 });
 
             modelBuilder.Entity("RockBank.Domain.Classes.Transactions.Transfer", b =>
                 {
-                    b.HasBaseType("RockBank.Domain.Classes.Transaction");
-
-                    b.Property<Guid>("DestinationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasBaseType("RockBank.Domain.Classes.Cashflow");
 
                     b.HasIndex("DestinationId");
 
@@ -140,7 +140,7 @@ namespace RockBank.Migrations
 
             modelBuilder.Entity("RockBank.Domain.Classes.Transactions.Withdraw", b =>
                 {
-                    b.HasBaseType("RockBank.Domain.Classes.Transaction");
+                    b.HasBaseType("RockBank.Domain.Classes.Cashflow");
 
                     b.HasDiscriminator().HasValue("Withdraw");
                 });
@@ -156,7 +156,7 @@ namespace RockBank.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("RockBank.Domain.Classes.Transaction", b =>
+            modelBuilder.Entity("RockBank.Domain.Classes.Cashflow", b =>
                 {
                     b.HasOne("RockBank.Domain.Classes.Accounts.Account", null)
                         .WithMany("Transactions")
