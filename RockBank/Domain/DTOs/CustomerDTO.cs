@@ -8,9 +8,9 @@ namespace RockBank.Domain.DTOs
         private void Validate()
         {
             var contract = new Contract<CustomerDTO>()
-                .IsNotNull(Name, "Name")
-                .IsNotNull(CPF, "CPF")
-                .IsNotNull(Password, "Password");
+                .IsNotNullOrEmpty(Name, "Name")
+                .IsNotNullOrEmpty(CPF, "CPF")
+                .IsNotNullOrEmpty(Password, "Password");
             AddNotifications(contract);
         }
 

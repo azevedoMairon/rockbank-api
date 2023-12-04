@@ -9,14 +9,14 @@ namespace RockBank.Domain.DTOs
         private void Validate()
         {
             var contract = new Contract<AccountDTO>()
-                .IsNotNull(Number, "Value")
-                .IsNotNull(CustomerId, "CustomerId")
+                .IsNotNullOrEmpty(Number, "Number")
                 .IsNotNull(Balance, "Balance")
-                .IsGreaterThan(Balance, 0, "Balance");
+                .IsGreaterOrEqualsThan(Balance, 0, "Balance")
+                .IsNotNull(CustomerId, "CustomerId");
             AddNotifications(contract);
         }
 
-        public AccountDTO(string number, float balance, Guid customerId)
+        public AccountDTO(string number, double balance, Guid customerId)
         {
             Number = number;
             Balance = balance;
@@ -25,7 +25,7 @@ namespace RockBank.Domain.DTOs
         }
 
         public string Number { get; private set; }
-        public float Balance { get; private set; }
+        public double Balance { get; private set; }
         public Guid CustomerId { get; set; }
     }
 }

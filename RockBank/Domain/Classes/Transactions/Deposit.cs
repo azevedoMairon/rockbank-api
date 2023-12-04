@@ -20,7 +20,7 @@ namespace RockBank.Domain.Classes.Transactions
         }
         public override double CalculateTax(double value)
         {
-            return value * 0.01;
+            return Math.Truncate((value * 0.01) * 100) / 100;
         }
         public override double CalculateValue(double value)
         {
