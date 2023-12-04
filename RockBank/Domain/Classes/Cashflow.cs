@@ -15,15 +15,7 @@ namespace RockBank.Domain.Classes
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public Guid DestinationId { get; set; }
-
         public abstract double CalculateTax(double value);
         public abstract double CalculateValue(double value);
-        public void Validate()
-        {
-            var contract = new Contract<Cashflow>()
-                .IsNotNull(Value, "Value")
-                .IsGreaterThan(Value, 0, "Value");
-            AddNotifications(contract);
-        }
     }
 }

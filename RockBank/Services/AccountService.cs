@@ -1,7 +1,10 @@
-﻿using RockBank.Domain.Classes.Accounts;
+﻿using RockBank.Domain.Classes;
+using RockBank.Domain.Classes.Accounts;
+using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
 using RockBank.Services.Interfaces;
+using System.Transactions;
 
 namespace RockBank.Services
 {
@@ -19,7 +22,12 @@ namespace RockBank.Services
             return _context.Accounts.ToList();
         }
         public Account Get( Guid id ) {
-            return _context.Accounts.Find(id);
+            Account account = _context.Accounts.Find(id);
+            Customer customer = _context.Customers.Find(account.CustomerId);
+
+            account.Customer = customer;
+
+            return account;
         }
 
         public Account Create(AccountDTO accountDTO)
@@ -30,6 +38,49 @@ namespace RockBank.Services
             _context.SaveChanges();
             
             return account;
+        }
+
+        private void PersistMoneyOperation(Account account, Cashflow cashFlow)
+        {
+            account.Transactions.Add(cashFlow);
+
+            account.EditInfo(account.Balance, account.Transactions);
+
+            _context.Transactions.Add(cashFlow);
+            _context.SaveChanges();
+        }
+
+        public CashFlowDTO CreateDeposit(DepositDTO depositDTO, Account account)
+        {
+            Deposit deposit = new Deposit(depositDTO.Value, depositDTO.AccountId, account.Customer.Name);
+
+            account.AddBalance(deposit.Value);
+            PersistMoneyOperation(account, deposit);
+
+            return new CashFlowDTO(deposit.Type, deposit.Value, deposit.Tax, deposit.CreatedBy, deposit.CreatedOn, account.Balance);
+        }
+
+        public CashFlowDTO CreateWithdraw(WithdrawDTO withdrawDTO, Account account)
+        {
+            Withdraw withdraw = new Withdraw(withdrawDTO.Value, withdrawDTO.AccountId, account.Customer.Name);
+
+            account.RemoveBalance(withdraw.Value);
+            PersistMoneyOperation(account, withdraw);
+
+            return new CashFlowDTO(withdraw.Type, withdraw.Value, withdraw.Tax, withdraw.CreatedBy, withdraw.CreatedOn, account.Balance);
+        }
+
+        public CashFlowDTO CreateTransfer(TransferDTO transferDTO, Account sourceAccount, Account destinationAccount)
+        {
+            Transfer transfer = new Transfer(transferDTO.Value, transferDTO.SourceAccountId, transferDTO.DestinationAccountId, sourceAccount.Customer.Name);
+
+            sourceAccount.RemoveBalance(transfer.Value);
+            PersistMoneyOperation(sourceAccount, transfer);
+
+            destinationAccount.AddBalance(transfer.Value);
+            PersistMoneyOperation(destinationAccount, transfer);
+
+            return new CashFlowDTO(transfer.Type, transfer.Value, transfer.Tax, transfer.CreatedBy, transfer.CreatedOn, sourceAccount.Balance);
         }
     }
 }

@@ -11,7 +11,6 @@
             CreatedOn = createdOn;
             CurrentBalance = "R$ " + currentBalance;
         }
-
         public string Type { get; private set; }
         public string Tax { get; private set; }
         public string Value { get; private set; }

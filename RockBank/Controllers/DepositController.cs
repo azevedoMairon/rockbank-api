@@ -3,6 +3,7 @@ using RockBank.Domain.Classes.Accounts;
 using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
+using RockBank.Services;
 using RockBank.Utils;
 
 namespace RockBank.Controllers
@@ -11,29 +12,33 @@ namespace RockBank.Controllers
     [Route("[controller]")]
     public class DepositController : ControllerBase
     {
-        [HttpPost]
-        public IResult Deposit(DepositDTO depositDTO, ApplicationDBContext context)
+        private readonly AccountService _accountService;
+
+        public DepositController(AccountService accountService)
         {
-            Account account = context.Accounts.Find(depositDTO.Account);
-            Customer customer = context.Customers.Find(account.CustomerId);
+            _accountService = accountService;
+        }
 
-            if (account == null)
-                return Results.NotFound("There's no such Account with the given Id");
-
-            Deposit deposit = new Deposit(depositDTO.Value, account.Id, customer.Name);
-
-            if (!deposit.IsValid)
-                return Results.ValidationProblem(deposit.Notifications.ConvertToProblemDetails());
-
-            account.AddBalance(deposit.Value);
-            account.Transactions.Add(deposit);
-
-            account.EditInfo(account.Balance, account.Transactions);
+        [HttpPost]
+        public IResult Deposit(DepositDTO depositDTO)
+        {
+            if (depositDTO == null)
+                return Results.BadRequest();
             
-            context.Transactions.Add(deposit);
-            context.SaveChanges();
+            if(!depositDTO.IsValid) 
+                return Results.ValidationProblem(depositDTO.Notifications.ConvertToProblemDetails());
 
-            return Results.Ok(new CashFlowDTO(deposit.Type, deposit.Value, deposit.Tax, deposit.CreatedBy, deposit.CreatedOn, account.Balance));
+            Account account = _accountService.Get(depositDTO.AccountId);
+
+            if (account != null)
+            {
+                CashFlowDTO cashFlow = _accountService.CreateDeposit(depositDTO, account);
+                return Results.Ok(cashFlow);
+            } 
+            else
+            {
+                return Results.NotFound("There's no such Account with the given Id");
+            }
         }
     }
 }

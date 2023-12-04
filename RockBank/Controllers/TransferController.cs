@@ -3,7 +3,9 @@ using RockBank.Domain.Classes.Accounts;
 using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
+using RockBank.Services;
 using RockBank.Utils;
+using System.Security.Cryptography.Xml;
 
 namespace RockBank.Controllers
 {
@@ -11,45 +13,38 @@ namespace RockBank.Controllers
     [Route("[controller]")]
     public class TransferController
     {
+        private readonly AccountService _accountService;
+
+        public TransferController(AccountService accountService)
+        {
+            _accountService = accountService;
+        }
+
         [HttpPost]
         public IResult Transfer(TransferDTO transferDTO, ApplicationDBContext context)
         {
             if (transferDTO == null)
                 return Results.BadRequest();
 
-            if (transferDTO.Value < 0)
+            if (!transferDTO.IsValid)
+                return Results.ValidationProblem(transferDTO.Notifications.ConvertToProblemDetails());
+            
+            Account sourceAccount = _accountService.Get(transferDTO.SourceAccountId);
+            Account destinationAccount = _accountService.Get(transferDTO.DestinationAccountId);
+
+            if (sourceAccount != null && destinationAccount != null)
             {
-                return Results.BadRequest("You Can't perform a transfer with negative value."); ;
+                if (sourceAccount.Balance - transferDTO.Value < 0)
+                    return Results.BadRequest("There's no suficient balance to accomplish this transfer.");
+
+                CashFlowDTO cashFlow = _accountService.CreateTransfer(transferDTO, sourceAccount, destinationAccount);
+
+                return Results.Ok(cashFlow);
             }
-
-            Account sourceAccount = context.Accounts.Find(transferDTO.Source);
-            Account destinationAccount = context.Accounts.Find(transferDTO.Destination); 
-            Customer customer = context.Customers.Find(sourceAccount.CustomerId);
-
-            if (sourceAccount == null || destinationAccount == null)
+            else
+            {
                 return Results.NotFound("There's no such Account with the given Id.");
-
-            if (sourceAccount.Balance - transferDTO.Value < 0) {
-                return Results.BadRequest("There's no suficient balance to accomplish this transfer."); ;
-            }
-
-            Transfer transfer = new Transfer(transferDTO.Value, sourceAccount.Id, destinationAccount.Id, customer.Name);
-
-            if (!transfer.IsValid)
-                return Results.ValidationProblem(transfer.Notifications.ConvertToProblemDetails());
-
-            sourceAccount.RemoveBalance(transfer.Value);
-            destinationAccount.AddBalance(transfer.Value);
-
-            sourceAccount.Transactions.Add(transfer);
-            destinationAccount.Transactions.Add(transfer);
-
-            sourceAccount.EditInfo(sourceAccount.Balance, sourceAccount.Transactions);
-            destinationAccount.EditInfo(destinationAccount.Balance, destinationAccount.Transactions);
-            context.Transactions.Add(transfer);
-            context.SaveChanges();
-
-            return Results.Ok(new CashFlowDTO(transfer.Type, transfer.Value, transfer.Tax, transfer.CreatedBy, transfer.CreatedOn, sourceAccount.Balance));
+            }          
         }
     }
 }

@@ -1,8 +1,26 @@
-﻿namespace RockBank.Domain.DTOs
+﻿using Flunt.Notifications;
+using Flunt.Validations;
+
+namespace RockBank.Domain.DTOs
 {
-    public class WithdrawDTO
+    public class WithdrawDTO : Notifiable<Notification>
     {
-        public double Value { get; set; }
-        public Guid Account { get; set; }
+        private void Validate()
+        {
+            var contract = new Contract<WithdrawDTO>()
+                .IsNotNull(Value, "Value")
+                .IsGreaterThan(Value, 0, "Value")
+                .IsNotNull(AccountId, "AccountId");
+            AddNotifications(contract);
+        }
+        public WithdrawDTO(double value, Guid account)
+        {
+            Validate();
+            Value = value;
+            AccountId = account;
+        }
+
+        public double Value { get; private set; }
+        public Guid AccountId { get; private set; }
     }
 }

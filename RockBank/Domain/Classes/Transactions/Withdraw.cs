@@ -2,11 +2,14 @@
 {
     public class Withdraw : Cashflow
     {
-        public Withdraw()
+        public Withdraw(double value, Guid sourceId, string createdBy)
         {
             Type = "Withdraw";
+            Value = CalculateValue(value);
+            SourceId = sourceId;
+            CreatedBy = createdBy;
+            Tax = CalculateTax(value);
         }
-
         public override double CalculateTax(double value)
         {
             return 4;

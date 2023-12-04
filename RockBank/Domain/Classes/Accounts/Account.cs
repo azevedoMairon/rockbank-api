@@ -8,7 +8,7 @@ namespace RockBank.Domain.Classes.Accounts
         public string Number { get; private set; }
         public double Balance { get; private set; }
         public Guid CustomerId { get; private set; }
-        public Customer Customer { get; private set; }
+        public Customer Customer { get; set; }
         public List<Cashflow> Transactions { get; private set; }
 
         public Account(string number, double balance, Guid customerId)

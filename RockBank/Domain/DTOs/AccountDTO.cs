@@ -8,7 +8,7 @@ namespace RockBank.Domain.DTOs
     {
         private void Validate()
         {
-            var contract = new Contract<Account>()
+            var contract = new Contract<AccountDTO>()
                 .IsNotNull(Number, "Value")
                 .IsNotNull(CustomerId, "CustomerId")
                 .IsNotNull(Balance, "Balance")
