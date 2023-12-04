@@ -4,6 +4,7 @@ using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
 using RockBank.Services;
+using RockBank.Services.Interfaces;
 using RockBank.Utils;
 
 namespace RockBank.Controllers
@@ -12,9 +13,9 @@ namespace RockBank.Controllers
     [Route("[controller]")]
     public class DepositController : ControllerBase
     {
-        private readonly AccountService _accountService;
+        private readonly IAccountService _accountService;
 
-        public DepositController(AccountService accountService)
+        public DepositController(IAccountService accountService)
         {
             _accountService = accountService;
         }

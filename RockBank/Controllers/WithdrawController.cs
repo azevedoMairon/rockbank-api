@@ -4,6 +4,7 @@ using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
 using RockBank.Services;
+using RockBank.Services.Interfaces;
 using RockBank.Utils;
 
 namespace RockBank.Controllers
@@ -12,15 +13,15 @@ namespace RockBank.Controllers
     [Route("[controller]")]
     public class WithdrawController : ControllerBase
     {
-        private readonly AccountService _accountService;
+        private readonly IAccountService _accountService;
 
-        public WithdrawController(AccountService accountService)
+        public WithdrawController(IAccountService accountService)
         {
             _accountService = accountService;            
         }
 
         [HttpPost]
-        public IResult Withdraw(WithdrawDTO withdrawDTO, ApplicationDBContext context)
+        public IResult Withdraw(WithdrawDTO withdrawDTO)
         {
             if (withdrawDTO == null)
                 return Results.BadRequest();

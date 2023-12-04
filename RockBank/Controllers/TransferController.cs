@@ -1,21 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RockBank.Domain.Classes.Accounts;
-using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
-using RockBank.Services;
+using RockBank.Services.Interfaces;
 using RockBank.Utils;
-using System.Security.Cryptography.Xml;
 
 namespace RockBank.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TransferController
+    public class TransferController : ControllerBase
     {
-        private readonly AccountService _accountService;
-
-        public TransferController(AccountService accountService)
+        private readonly IAccountService _accountService;
+        
+        public TransferController(IAccountService accountService)
         {
             _accountService = accountService;
         }

@@ -2,6 +2,7 @@
 using RockBank.Domain.Classes.Accounts;
 using RockBank.Domain.DTOs;
 using RockBank.Services;
+using RockBank.Services.Interfaces;
 using RockBank.Utils;
 
 namespace RockBank.Controllers
@@ -10,9 +11,9 @@ namespace RockBank.Controllers
     [Route("[controller]")]
     public class CustomerController : ControllerBase
     {
-        private readonly CustomerService _customerService;
+        private readonly ICustomerService _customerService;
 
-        public CustomerController(CustomerService customerService)
+        public CustomerController(ICustomerService customerService)
         {
             _customerService = customerService;
         }
