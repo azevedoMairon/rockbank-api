@@ -1,7 +1,9 @@
 ﻿using RockBank.Domain.Classes.Accounts;
+using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
 using RockBank.Services.Interfaces;
+using RockBank.Utils;
 
 namespace RockBank.Services
 {

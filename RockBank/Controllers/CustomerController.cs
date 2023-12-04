@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RockBank.Domain.Classes.Accounts;
+using RockBank.Domain.Classes.Transactions;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
 using RockBank.Services;
+using RockBank.Utils;
 
 namespace RockBank.Controllers
 {
@@ -24,6 +26,9 @@ namespace RockBank.Controllers
         {
             if(customerDTO == null)
                 return Results.BadRequest();
+
+            if (!customerDTO.IsValid)
+                return Results.ValidationProblem(customerDTO.Notifications.ConvertToProblemDetails());
 
             Customer customer = _customerService.Create(customerDTO);
 

@@ -1,6 +1,4 @@
 ﻿using Flunt.Validations;
-using RockBank.Domain.Classes.Accounts;
-using RockBank.Domain.Classes.Transactions;
 
 namespace RockBank.Domain.Classes
 {

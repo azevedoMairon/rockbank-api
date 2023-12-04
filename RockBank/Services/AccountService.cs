@@ -2,7 +2,7 @@
 
 namespace RockBank.Services
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
     }
 }

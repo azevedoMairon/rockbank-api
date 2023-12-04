@@ -1,4 +1,7 @@
-﻿namespace RockBank.Domain.Classes.Accounts
+﻿using Flunt.Validations;
+using Newtonsoft.Json.Linq;
+
+namespace RockBank.Domain.Classes.Accounts
 {
     public class Account : Entity
     {
@@ -8,16 +11,29 @@
         public Customer Customer { get; private set; }
         public List<Transaction> Transactions { get; private set; }
 
+        private void Validate()
+        {
+            var contract = new Contract<Account>()
+                .IsNotNull(Number, "Value")
+                .IsNotNull(CustomerId, "CustomerId")
+                .IsNotNull(Balance, "Balance")
+                .IsGreaterThan(Balance, 0, "Balance");
+            AddNotifications(contract);
+        }
+
         public Account(string number, double balance, Guid customerId)
         {
+            Validate();
+
             Number = number;
             Balance = balance;
             CustomerId = customerId;
             Transactions = new List<Transaction>();
         }
-
         public void EditInfo(double balance, List<Transaction> transactions)
         {
+            Validate();
+
             Balance = balance;
             Transactions = transactions;
         }
