@@ -4,7 +4,7 @@ using System.Diagnostics.Contracts;
 
 namespace RockBank.Domain.Classes.Transactions
 {
-    public class Deposit : Transaction
+    public class Deposit : Cashflow
     {
         public Deposit(double value, Guid sourceId, string createdBy)
         {

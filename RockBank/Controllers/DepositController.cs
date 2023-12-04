@@ -33,7 +33,7 @@ namespace RockBank.Controllers
             context.Transactions.Add(deposit);
             context.SaveChanges();
 
-            return Results.Ok(new TransactionDTO(deposit.Type, deposit.Value, deposit.Tax, deposit.CreatedBy, deposit.CreatedOn, account.Balance));
+            return Results.Ok(new CashFlowDTO(deposit.Type, deposit.Value, deposit.Tax, deposit.CreatedBy, deposit.CreatedOn, account.Balance));
         }
     }
 }

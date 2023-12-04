@@ -1,6 +1,6 @@
 ﻿namespace RockBank.Domain.Classes.Transactions
 {
-    public class Withdraw : Transaction
+    public class Withdraw : Cashflow
     {
         public Withdraw()
         {

@@ -9,7 +9,7 @@ namespace RockBank.Domain.Classes.Accounts
         public double Balance { get; private set; }
         public Guid CustomerId { get; private set; }
         public Customer Customer { get; private set; }
-        public List<Transaction> Transactions { get; private set; }
+        public List<Cashflow> Transactions { get; private set; }
 
         public Account(string number, double balance, Guid customerId)
         {
@@ -18,7 +18,7 @@ namespace RockBank.Domain.Classes.Accounts
             CustomerId = customerId;
             Transactions = [];
         }
-        public void EditInfo(double balance, List<Transaction> transactions)
+        public void EditInfo(double balance, List<Cashflow> transactions)
         {
             Balance = balance;
             Transactions = transactions;

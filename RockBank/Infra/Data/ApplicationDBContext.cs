@@ -10,7 +10,7 @@ namespace RockBank.Infra.Data
     {
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Cashflow> Transactions { get; set; }
         public DbSet<Deposit> Deposits { get; set; }
         public DbSet<Withdraw> Withdraws { get; set; }
         public DbSet<Transfer> Transfers { get; set; }

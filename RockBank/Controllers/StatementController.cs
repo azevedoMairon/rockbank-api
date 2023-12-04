@@ -16,7 +16,7 @@ namespace RockBank.Controllers
             if (context.Accounts.Find(accountId) == null)
                 return Results.NotFound("There's no such Account with the given Id");
 
-            List<Transaction> transactions = context.Transactions.Where(t => t.SourceId == accountId || t.DestinationId == accountId).ToList();
+            List<Cashflow> transactions = context.Transactions.Where(t => t.SourceId == accountId || t.DestinationId == accountId).ToList();
 
             return Results.Ok(transactions);
         }

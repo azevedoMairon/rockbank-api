@@ -2,7 +2,7 @@
 
 namespace RockBank.Domain.Classes.Transactions
 {
-    public class Transfer : Transaction
+    public class Transfer : Cashflow
     {
         public Transfer(double value, Guid sourceId, Guid destinationId, string createdBy)
         {

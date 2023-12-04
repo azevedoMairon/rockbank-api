@@ -49,7 +49,7 @@ namespace RockBank.Controllers
             context.Transactions.Add(transfer);
             context.SaveChanges();
 
-            return Results.Ok(new TransactionDTO(transfer.Type, transfer.Value, transfer.Tax, transfer.CreatedBy, transfer.CreatedOn, sourceAccount.Balance));
+            return Results.Ok(new CashFlowDTO(transfer.Type, transfer.Value, transfer.Tax, transfer.CreatedBy, transfer.CreatedOn, sourceAccount.Balance));
         }
     }
 }

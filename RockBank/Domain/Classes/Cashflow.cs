@@ -2,9 +2,9 @@
 
 namespace RockBank.Domain.Classes
 {
-    public abstract class Transaction : Entity
+    public abstract class Cashflow : Entity
     {
-        public Transaction()
+        public Cashflow()
         {
             CreatedOn = DateTime.Now;
         }
@@ -20,7 +20,7 @@ namespace RockBank.Domain.Classes
         public abstract double CalculateValue(double value);
         public void Validate()
         {
-            var contract = new Contract<Transaction>()
+            var contract = new Contract<Cashflow>()
                 .IsNotNull(Value, "Value")
                 .IsGreaterThan(Value, 0, "Value");
             AddNotifications(contract);

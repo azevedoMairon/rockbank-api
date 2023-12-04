@@ -1,8 +1,8 @@
 ﻿namespace RockBank.Domain.DTOs
 {
-    public class TransactionDTO
+    public class CashFlowDTO
     {
-        public TransactionDTO(string type, double value, double tax, string createdBy, DateTime createdOn, double currentBalance)
+        public CashFlowDTO(string type, double value, double tax, string createdBy, DateTime createdOn, double currentBalance)
         {
             Type = type;
             Value = "R$ " + value;
