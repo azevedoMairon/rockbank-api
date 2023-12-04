@@ -5,16 +5,21 @@ using RockBank.Controllers;
 using RockBank.Domain.Classes.Accounts;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
+using RockBank.Services;
 
 namespace RockBankTests.Controller
 {
     [TestClass]
     public class AccountControllerTests
     {
+        private ApplicationDBContext _dbContext;
         private DbContextOptions<ApplicationDBContext> _options;
+
         private CustomerController _customerController;
         private AccountController _accountController;
-        private ApplicationDBContext _dbContext;
+
+        private CustomerService _customerService;
+        private AccountService _accountService;
 
         [TestInitialize]
         public void Initialize()
@@ -24,8 +29,12 @@ namespace RockBankTests.Controller
                 .Options;
 
             _dbContext = new ApplicationDBContext(_options);
-            _customerController = new CustomerController();
-            _accountController = new AccountController(_dbContext);
+
+            _customerService = new CustomerService(_dbContext);
+            _accountService = new AccountService(_dbContext);
+
+            _customerController = new CustomerController(_customerService);
+            _accountController = new AccountController(_accountService, _customerService);
         }
 
         [TestMethod]
@@ -54,7 +63,7 @@ namespace RockBankTests.Controller
         public void ControllerShouldCreateAccount()
         {
             CustomerDTO customerDTO = new CustomerDTO("Mairon Azevedo", "111-111-111-11", "123456");
-            Created<Customer> customerResult = (Created<Customer>)_customerController.Create(customerDTO, _dbContext);
+            Created<Customer> customerResult = (Created<Customer>)_customerController.Create(customerDTO);
 
             AccountDTO accountDTO = new AccountDTO("77777-77", 5000, customerResult.Value.Id);
 
@@ -71,7 +80,7 @@ namespace RockBankTests.Controller
         public void ControllerShouldReturnAllAccounts()
         {
             CustomerDTO customerDTO = new CustomerDTO("Mairon Azevedo", "111-111-111-11", "123456");
-            Created<Customer> customerResult = (Created<Customer>)_customerController.Create(customerDTO, _dbContext);
+            Created<Customer> customerResult = (Created<Customer>)_customerController.Create(customerDTO);
 
             AccountDTO account1 = new AccountDTO("77777-77", 5000, customerResult.Value.Id);
             AccountDTO account2 = new AccountDTO("23626-37", 3000, customerResult.Value.Id);
@@ -79,7 +88,7 @@ namespace RockBankTests.Controller
             _accountController.Create(account1);
             _accountController.Create(account2);
 
-            Ok<List<Account>> result = (Ok<List<Account>>)_accountController.Read(_dbContext);
+            Ok<List<Account>> result = (Ok<List<Account>>)_accountController.Read();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
@@ -95,7 +104,7 @@ namespace RockBankTests.Controller
         [TestMethod]
         public void ControllerShoudReturnEmptyList()
         {
-            Ok<List<Account>> result = (Ok<List<Account>>)_accountController.Read(_dbContext);
+            Ok<List<Account>> result = (Ok<List<Account>>)_accountController.Read();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);

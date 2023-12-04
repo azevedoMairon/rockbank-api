@@ -2,6 +2,10 @@
 {
     public class Withdraw : Cashflow
     {
+        public Withdraw()
+        {
+            
+        }
         public Withdraw(double value, Guid sourceId, string createdBy)
         {
             Type = "Withdraw";

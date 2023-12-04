@@ -4,10 +4,11 @@ namespace RockBank.Domain.Classes
 {
     public abstract class Cashflow : Entity
     {
-        public Cashflow()
+        protected Cashflow()
         {
             CreatedOn = DateTime.Now;
         }
+
         public double Tax { get; set; }
         public string Type { get; set; }
         public double Value { get; set; }

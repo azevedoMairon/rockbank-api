@@ -6,6 +6,10 @@ namespace RockBank.Domain.Classes.Transactions
 {
     public class Deposit : Cashflow
     {
+        public Deposit()
+        {
+            
+        }
         public Deposit(double value, Guid sourceId, string createdBy)
         {
             Type = "Deposit";

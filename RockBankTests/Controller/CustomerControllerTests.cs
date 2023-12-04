@@ -6,6 +6,7 @@ using RockBank.Controllers;
 using RockBank.Domain.Classes.Accounts;
 using RockBank.Domain.DTOs;
 using RockBank.Infra.Data;
+using RockBank.Services;
 
 namespace RockBankTests.Controller
 {
@@ -13,8 +14,9 @@ namespace RockBankTests.Controller
     public class CustomerControllerTests
     {
         private DbContextOptions<ApplicationDBContext> _options;
-        private ApplicationDBContext _dbContext;
         private CustomerController _customerController;
+        private CustomerService _customerService;
+        private ApplicationDBContext _dbContext;
 
         [TestInitialize]
         public void Initialize()
@@ -24,7 +26,8 @@ namespace RockBankTests.Controller
                 .Options;
 
             _dbContext = new ApplicationDBContext(_options);
-            _customerController = new CustomerController();
+            _customerService = new CustomerService(_dbContext);
+            _customerController = new CustomerController(_customerService);
         }
 
         [TestMethod]
@@ -32,7 +35,7 @@ namespace RockBankTests.Controller
         {
             CustomerDTO customerDTO = null;
 
-            BadRequest result = (BadRequest)_customerController.Create(customerDTO, _dbContext);
+            BadRequest result = (BadRequest)_customerController.Create(customerDTO);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status400BadRequest, result.StatusCode);
@@ -43,7 +46,7 @@ namespace RockBankTests.Controller
         {
             CustomerDTO customerDTO = new CustomerDTO("Mairon Azevedo", "111-111-111-11", "123456");
 
-            Created<Customer> result = (Created<Customer>)_customerController.Create(customerDTO, _dbContext);
+            Created<Customer> result = (Created<Customer>)_customerController.Create(customerDTO);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status201Created, result.StatusCode);
@@ -57,10 +60,10 @@ namespace RockBankTests.Controller
             CustomerDTO customer1 = new CustomerDTO("Mairon Azevedo", "111-111-111-11", "123456");
             CustomerDTO customer2 = new CustomerDTO("Denerson Eduardo", "111-111-111-11", "123456");
 
-            _customerController.Create(customer1, _dbContext);
-            _customerController.Create(customer2, _dbContext);
+            _customerController.Create(customer1);
+            _customerController.Create(customer2);
 
-            Ok<List<Customer>> result = (Ok<List<Customer>>)_customerController.Read(_dbContext);
+            Ok<List<Customer>> result = (Ok<List<Customer>>)_customerController.Read();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
@@ -76,7 +79,7 @@ namespace RockBankTests.Controller
         [TestMethod]
         public void ControllerShoudReturnEmptyList()
         {
-            Ok<List<Customer>> result = (Ok<List<Customer>>)_customerController.Read(_dbContext);
+            Ok<List<Customer>> result = (Ok<List<Customer>>)_customerController.Read();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);

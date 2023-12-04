@@ -4,6 +4,10 @@ namespace RockBank.Domain.Classes.Transactions
 {
     public class Transfer : Cashflow
     {
+        public Transfer()
+        {
+            
+        }
         public Transfer(double value, Guid sourceId, Guid destinationId, string createdBy)
         {
             Type = "Transfer";

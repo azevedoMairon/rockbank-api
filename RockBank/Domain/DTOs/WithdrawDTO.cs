@@ -15,9 +15,10 @@ namespace RockBank.Domain.DTOs
         }
         public WithdrawDTO(double value, Guid account)
         {
-            Validate();
             Value = value;
             AccountId = account;
+
+            Validate();
         }
 
         public double Value { get; private set; }

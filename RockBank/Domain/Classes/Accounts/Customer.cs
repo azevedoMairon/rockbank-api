@@ -5,7 +5,10 @@
         public string Name { get; private set; }
         public string CPF { get; private set; }
         public string Password { get; private set; }
-
+        public Customer()
+        {
+            
+        }
         public Customer(string name, string cpf, string password)
         {
             this.Name = name;

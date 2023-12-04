@@ -11,6 +11,11 @@ namespace RockBank.Domain.Classes.Accounts
         public Customer Customer { get; set; }
         public List<Cashflow> Transactions { get; private set; }
 
+        public Account()
+        {
+            
+        }
+
         public Account(string number, double balance, Guid customerId)
         {
             Number = number;
@@ -18,6 +23,7 @@ namespace RockBank.Domain.Classes.Accounts
             CustomerId = customerId;
             Transactions = [];
         }
+
         public void EditInfo(double balance, List<Cashflow> transactions)
         {
             Balance = balance;

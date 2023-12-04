@@ -16,10 +16,10 @@ namespace RockBank.Domain.DTOs
 
         public DepositDTO(double value, Guid accountId)
         {
-            Validate();
-
             Value = value;
             AccountId = accountId;
+
+            Validate();
         }
 
         public double Value { get; set; }

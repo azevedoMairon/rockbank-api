@@ -18,11 +18,10 @@ namespace RockBank.Domain.DTOs
 
         public AccountDTO(string number, float balance, Guid customerId)
         {
-            Validate();
-
             Number = number;
             Balance = balance;
             CustomerId = customerId; 
+            Validate();
         }
 
         public string Number { get; private set; }

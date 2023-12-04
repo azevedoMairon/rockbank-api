@@ -17,10 +17,11 @@ namespace RockBank.Domain.DTOs
         }
         public TransferDTO(double value, Guid source, Guid destination)
         {
-            Validate();
             Value = value;
             SourceId = source;
             DestinationId = destination;
+
+            Validate();
         }
         public double Value { get; private set; }
         public Guid SourceId { get; private set; }
